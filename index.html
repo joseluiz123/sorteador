@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4a90e2">
+    <title>Sorteador Mágico</title>
+    <!-- Link para o Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Ícone para iOS -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2609/2609312.png">
+    
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2ecc71;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 85%;
+            max-width: 400px;
+        }
+
+        .input-group { margin-bottom: 1.5rem; }
+
+        input {
+            padding: 12px;
+            width: 80px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .circle-area {
+            width: 180px;
+            height: 180px;
+            border: 8px solid #eee;
+            border-radius: 50%;
+            margin: 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+        }
+
+        #number-display {
+            font-size: 4rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .animating { animation: pulse 0.15s infinite alternate; }
+
+        @keyframes pulse {
+            from { transform: scale(0.7); opacity: 0.6; }
+            to { transform: scale(1.2); opacity: 1; }
+        }
+
+        .winner {
+            color: var(--secondary-color);
+            transform: scale(1.4);
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Sorteador</h2>
+        <div class="input-group">
+            <label style="display:block; margin-bottom:5px">Máximo:</label>
+            <input type="number" id="max-number" value="100">
+        </div>
+
+        <div class="circle-area">
+            <div id="number-display">?</div>
+        </div>
+
+        <button id="draw-btn" onclick="startDraw()">SORTEAR AGORA</button>
+    </div>
+
+    <script>
+        // Registro do Service Worker para o PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        function startDraw() {
+            const max = parseInt(document.getElementById('max-number').value);
+            const display = document.getElementById('number-display');
+            const btn = document.getElementById('draw-btn');
+            
+            if (isNaN(max) || max <= 0) return;
+
+            btn.disabled = true;
+            display.classList.remove('winner');
+            display.classList.add('animating');
+            
+            let counter = 0;
+            const interval = setInterval(() => {
+                display.innerText = Math.floor(Math.random() * max) + 1;
+                counter += 50;
+                if (counter >= 2000) {
+                    clearInterval(interval);
+                    const lucky = Math.floor(Math.random() * max) + 1;
+                    display.innerText = lucky;
+                    display.classList.remove('animating');
+                    display.classList.add('winner');
+                    btn.disabled = false;
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>

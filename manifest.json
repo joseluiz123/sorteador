@@ -1,0 +1,15 @@
+{
+  "name": "Sorteador Mágico",
+  "short_name": "Sorteador",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f4f7f6",
+  "theme_color": "#4a90e2",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2609/2609312.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
